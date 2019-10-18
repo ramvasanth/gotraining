@@ -20,9 +20,8 @@ func init() {
 		user{name: "marshal", age: 20, id: "2"},
 	}
 }
-
 func main() {
-	growTheFunc(100000)
+	callStackTrace()
 }
 
 /*  1. Function Parameters  */
@@ -135,10 +134,20 @@ func third() {
 }
 
 /* 6. Dynamic Statck */
-
+//go:noinline
 func growTheFunc(bufSize int) {
 	b := []byte{}
 	for i := 1; i <= bufSize; i++ {
 		b = append(b, 1)
 	}
+}
+
+/* 7. Stack Trace */
+func callStackTrace() {
+	slice := make([]string, 2, 4)
+	StackTrace(slice, "hello", 10)
+}
+
+func StackTrace(slice []string, str string, i int) {
+	panic("Want stack trace")
 }
