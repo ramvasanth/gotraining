@@ -21,7 +21,8 @@ func init() {
 	}
 }
 func main() {
-	callStackTrace()
+	//first()
+	stackExample()
 }
 
 /*  1. Function Parameters  */
@@ -114,7 +115,7 @@ func callFunc() {
 
 /* 5. Advanced */
 func stackExample() {
-	stackSlice := make([]byte, 10)
+	stackSlice := make([]byte, 1000)
 	s := runtime.Stack(stackSlice, false)
 	fmt.Printf("\n%s", stackSlice[0:s])
 }
@@ -128,7 +129,7 @@ func second() {
 }
 
 func third() {
-	for c := 0; c < 10; c++ {
+	for c := 0; c < 5; c++ {
 		fmt.Println(runtime.Caller(c))
 	}
 }

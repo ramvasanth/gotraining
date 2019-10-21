@@ -1,0 +1,13 @@
+One of the most useful data structures in computer science is the hash table.
+Many hash table implementations exist with varying properties,
+ but in general they offer fast lookups, adds, and deletes.
+ Go provides a built-in map type that implements a hash table.
+ Big O - O(1)
+
+ Declaration and initialization:
+
+ map[KeyType]ValueType
+
+ 1. Map types are reference types, like pointers or slices
+ 2.A nil map behaves like an empty map when reading, but attempts to write to a nil map will cause a runtime panic
+ 3.The make function allocates and initializes a hash map data structure and returns a map value that points to it.
