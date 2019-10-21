@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 type User struct {
 	name string
@@ -11,12 +14,15 @@ type User struct {
 func main() {
 	//sliceDeclaration()
 	//sliceisReferenceType()
-	sliceIteration()
+	//sliceIteration()
 	//sliceSlicing()
 	//sliceAppending()
-	//variadicSlice()
+	//sliceMemoryShare1()
+	//sliceMemoryShare2()
+	//variadicSlices()
+
 	//sliceBoundCheck([5]int{1, 2, 3, 4, 5}, 4)
-	//multiDimensionSlice()
+	multiDimensionSlice()
 }
 
 func sliceDeclaration() {
@@ -91,46 +97,119 @@ func sliceSlicing() {
 
 func sliceAppending() {
 	daysOfWeek := []string{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
-	fmt.Printf("%T, %v,%d, %p\n", daysOfWeek, daysOfWeek, cap(daysOfWeek), daysOfWeek)
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek, daysOfWeek, cap(daysOfWeek), len(daysOfWeek))
 	daysOfWeek = append(daysOfWeek, "new day")
-
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek, daysOfWeek, cap(daysOfWeek), len(daysOfWeek))
+	daysOfWeek = append(daysOfWeek, "new day")
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek, daysOfWeek, cap(daysOfWeek), len(daysOfWeek))
 }
 
-func variadicArrays(i ...int) {
+func sliceMemoryShare1() {
+	daysOfWeek := []string{"Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"}
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek, daysOfWeek, cap(daysOfWeek), len(daysOfWeek))
+
+	daysOfWeek1 := append(daysOfWeek, "new day")
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek1, daysOfWeek1, cap(daysOfWeek1), len(daysOfWeek1))
+	daysOfWeek1[0] = "new Mon"
+	fmt.Println(daysOfWeek[0], daysOfWeek1[0])
+
+	daysOfWeek1 = append(daysOfWeek1, "new day 1", "new day 2", "new day  3", "new day 4", "new day 5", "new day 6", "new day 7", "new day 8")
+	//fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek, daysOfWeek, cap(daysOfWeek), len(daysOfWeek))
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek1, daysOfWeek1, cap(daysOfWeek1), len(daysOfWeek1))
+}
+
+func sliceMemoryShare2() {
+	daysOfWeek := make([]string, 7, 10)
+	daysOfWeek[0] = "Mon"
+	daysOfWeek[1] = "Tue"
+	daysOfWeek[2] = "Wed"
+	daysOfWeek[3] = "Thu"
+	daysOfWeek[4] = "Fri"
+	daysOfWeek[5] = "Sat"
+	daysOfWeek[6] = "Sun"
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek, daysOfWeek, cap(daysOfWeek), len(daysOfWeek))
+	daysOfWeek1 := append(daysOfWeek, "new day")
+	daysOfWeek1[0] = "new Mon"
+	fmt.Println(daysOfWeek[0], daysOfWeek1[0])
+	fmt.Printf("%T, %v, cap-%d, len-%d\n", daysOfWeek1, daysOfWeek1, cap(daysOfWeek1), len(daysOfWeek1))
+
+	fmt.Println(daysOfWeek1[7])
+}
+func variadicSlices(i ...int) {
 	fmt.Println(i)
 }
 
-func callVariadicArrays() {
+func callVariadicSlices() {
 	b := []int{1, 2, 3, 4}
-	variadicArrays(b...)
+	variadicSlices(b...)
 }
 
-func multiDimensionArray() {
-	a := [2][2]int{
-		{3, 5},
-		{7, 9}, // This trailing comma is mandatory
-	}
-	fmt.Println(a)
+func multiDimensionSlice() {
+	/* a slice with 5 rows and 2 columns*/
+	var a = [][]int{{0, 0}, {1, 2}, {2, 4}, {3, 6}, {4, 8}}
+	var i, j int
 
-	// Just like 1D arrays, you don't need to initialize all the elements in a multi-dimensional array.
-	// Un-initialized array elements will be assigned the zero value of the array type.
-	b := [3][4]float64{
-		{1, 3},
-		{4.5, -3, 7.4, 2},
-		{6, 2, 11},
+	/* output each array element's value */
+	for i = 0; i < 5; i++ {
+		for j = 0; j < 2; j++ {
+			fmt.Printf("a[%d][%d] = %d\n", i, j, a[i][j])
+		}
 	}
 
-	fmt.Println(b)
+	// use make to create two dimension slice
+	ms := make([][]int, 10, 10)
+	for key := range ms {
+		ms[key] = make([]int, 10, 10)
+	}
+
 }
 
 //go build -gcflags="-d=ssa/check_bce/debug=1" example1.go
 //compiler optimization called Bounds Check Elimination or BCE.
 // The idea behind BCE is to give the compiler hints that index-based memory access is guaranteed to be safe and therefore
 // the compiler didn’t have to add extra code to check the memory access at runtime. The safe elimination of these integrity checks can help improve performance
-func arrayBoundCheck(s [5]int, i int) {
+func sliceBoundCheck(s []int, i int) {
 	_ = s[1] // bounds check
 	_ = s[i] //  bounds check
 	_ = s[1] //  bounds check eliminated!
 	_ = s[0] //  bounds check eliminated!
 
+}
+
+type Person struct {
+	Name string
+	Age  int
+}
+
+func (p Person) String() string {
+	return fmt.Sprintf("%s: %d", p.Name, p.Age)
+}
+
+// ByAge implements sort.Interface for []Person based on
+// the Age field.
+type ByAge []Person
+
+func (a ByAge) Len() int           { return len(a) }
+func (a ByAge) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByAge) Less(i, j int) bool { return a[i].Age < a[j].Age }
+
+func sortingSlice() {
+	s := []string{"Go", "Bravo", "Gopher", "Alpha", "Grin", "Delta"}
+	sort.Strings(s)
+	fmt.Println(s)
+	people := []Person{
+		{"Bob", 31},
+		{"John", 42},
+		{"Michael", 17},
+		{"Jenny", 26},
+	}
+
+	fmt.Println(people)
+	sort.Sort(ByAge(people))
+	fmt.Println(people)
+
+	sort.Slice(people, func(i, j int) bool {
+		return people[i].Age > people[j].Age
+	})
+	fmt.Println(people)
 }

@@ -93,21 +93,16 @@ func callVariadicArrays() {
 }
 
 func multiDimensionArray() {
-	a := [2][2]int{
-		{3, 5},
-		{7, 9}, // This trailing comma is mandatory
-	}
-	fmt.Println(a)
+	/* an array with 5 rows and 2 columns*/
+	var a = [5][2]int{{0, 0}, {1, 2}, {2, 4}, {3, 6}, {4, 8}}
+	var i, j int
 
-	// Just like 1D arrays, you don't need to initialize all the elements in a multi-dimensional array.
-	// Un-initialized array elements will be assigned the zero value of the array type.
-	b := [3][4]float64{
-		{1, 3},
-		{4.5, -3, 7.4, 2},
-		{6, 2, 11},
+	/* output each array element's value */
+	for i = 0; i < 5; i++ {
+		for j = 0; j < 2; j++ {
+			fmt.Printf("a[%d][%d] = %d\n", i, j, a[i][j])
+		}
 	}
-
-	fmt.Println(b)
 }
 
 //go build -gcflags="-d=ssa/check_bce/debug=1" example1.go

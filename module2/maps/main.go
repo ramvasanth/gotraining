@@ -22,7 +22,9 @@ func main() {
 	//simpleMap()
 	mapOrderObject()
 }
+func mapDeclaration() {
 
+}
 func objectMap() {
 	m := make(map[User]int)
 	u1 := &User{}
