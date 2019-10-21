@@ -20,9 +20,18 @@ func main() {
 	//sliceMemoryShare1()
 	//sliceMemoryShare2()
 	//variadicSlices()
-
+	//copySlice()
+	//deleteSliceEntry()
 	//sliceBoundCheck([5]int{1, 2, 3, 4, 5}, 4)
-	multiDimensionSlice()
+	//multiDimensionSlice()
+	//s := &([]int{1, 2, 3})
+	//fmt.Println("cap", cap(s))
+	//sliceWithoutPointer(s)
+	//fmt.Println(s)
+	//fmt.Println("cap", cap(s))
+	//sliceWithPointer(*s)
+	//fmt.Printf("%p\n", s)
+
 }
 
 func sliceDeclaration() {
@@ -174,6 +183,38 @@ func sliceBoundCheck(s []int, i int) {
 	_ = s[1] //  bounds check eliminated!
 	_ = s[0] //  bounds check eliminated!
 
+}
+
+//https://github.com/golang/go/wiki/SliceTricks
+func copySlice() {
+	var s = make([]int, 3)
+	n := copy(s, []int{0, 1, 2, 3}) // n == 3, s == []int{0, 1, 2}
+	fmt.Println(n)
+
+	s1 := []int{0, 1, 2}
+	n1 := copy(s1, s1[1:]) // n == 2, s == []int{1, 2, 2}
+	fmt.Println(n1)
+
+	//special case
+	var b = make([]byte, 5)
+	copy(b, "Hello, world!") // b == []byte("Hello")
+}
+
+func deleteSliceEntry() {
+	a := []int{0, 1, 2, 3}
+	toDelete := 1
+	a = append(a[:toDelete], a[toDelete+1:]...)
+	fmt.Println(a)
+}
+
+func sliceWithoutPointer(s []int) {
+	s = append(s, 1, 2, 3, 4, 5)
+	fmt.Println(s)
+}
+
+func sliceWithPointer(s *[]int) {
+
+	*s = append(*s, 1, 2, 3, 4, 5)
 }
 
 type Person struct {
