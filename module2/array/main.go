@@ -3,10 +3,16 @@ package main
 import "fmt"
 
 func main() {
-	arraySlicing()
+	arrayDeclaration()
+	//arrayisValueType()
+	//arrayIteration()
+	//arraySlicing()
+	//variadicArrays()
+	//arrayBoundCheck([5]int{1, 2, 3, 4, 5}, 4)
+	//multiDimensionArray()
 }
 
-func arrayDeclarationn() {
+func arrayDeclaration() {
 	var x [5]int // An array of 5 integers with var declarationn
 	x[0] = 100
 	x[1] = 101
@@ -26,6 +32,10 @@ func arrayDeclarationn() {
 	x2 := [...]int{9, 89, 7, 9, 11, 13, 9}
 	fmt.Println(x1 == x2)
 
+	c := new([10]int) // pointer to array
+	(*c)[0] = 1
+	c[0] = 1
+	fmt.Println(c[0])
 }
 
 func arrayisValueType() {
@@ -101,6 +111,13 @@ func multiDimensionArray() {
 }
 
 //go build -gcflags="-d=ssa/check_bce/debug=1" example1.go
-func arrayBoundCheck() {
+//compiler optimization called Bounds Check Elimination or BCE.
+// The idea behind BCE is to give the compiler hints that index-based memory access is guaranteed to be safe and therefore
+// the compiler didn’t have to add extra code to check the memory access at runtime. The safe elimination of these integrity checks can help improve performance
+func arrayBoundCheck(s [5]int, i int) {
+	_ = s[1] // bounds check
+	_ = s[i] //  bounds check
+	_ = s[1] //  bounds check eliminated!
+	_ = s[0] //  bounds check eliminated!
 
 }
